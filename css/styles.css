@@ -1,0 +1,13 @@
+/* styles.css */
+
+/* Add styles here to customize the appearance of your app */
+
+
+@tailwind base;
+@tailwind components;
+
+html, body {
+  @apply bg-transparent w-screen h-screen overflow-hidden;
+}
+
+@tailwind utilities;

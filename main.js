@@ -1,16 +1,37 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, screen, BrowserWindow, ipcMain} = require('electron')
 const path = require('path')
 
-function createWindow () {
+const isDev = !app.isPackaged;
+
+require('electron-reload')(__dirname);
+
+const createWindow = () => {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width,
+    height,
+    show: true,
+    transparent: true,
+    frame: false,
+    //resizable: false,
+    //maximizable: false,
+    //minimizable: false,
+    simpleFullscreen: true,
+    fullscreen: true,
+    //fullscreenable: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      nodeIntegration: true,
+      contextIsolation: false,
+      //preload: path.join(__dirname, 'preload.js')
     }
   })
+
+  if (isDev) {
+    //mainWindow.webContents.openDevTools()
+  }
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
@@ -41,3 +62,7 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+ipcMain.on('quit', (evt, arg) => {
+  app.quit()
+})
